@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Table(name = "clientes")
 public class Cliente extends Persona {
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4)
     private int clave;
     @ManyToOne
     @JoinColumn(name = "id_estado", nullable = false, foreignKey = @ForeignKey(name = "FK_cliente_estado"))
@@ -46,8 +46,6 @@ public class Cliente extends Persona {
     private void validarArgumentos(int clave, Estado estado) {
         ValidadorArgumento.validarObligatorio(clave, "La clave es obligatorio");
         ValidadorArgumento.validarObligatorio(estado, "El estado es obligatorio");
-
-
     }
 
     public int getClave() {
