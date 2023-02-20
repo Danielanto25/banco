@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.neorispichincha.app.entidad.TipoMovimiento;
 
-public interface TipoMovimientoRepository extends JpaRepository<TipoMovimiento, Long>{
+public interface TipoMovimientoRepositorio extends JpaRepository<TipoMovimiento, Long>{
 
 }

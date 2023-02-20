@@ -1,17 +1,19 @@
-package com.neorispichincha.app.servicio.cliente;
+package com.neorispichincha.app.servicio.cliente.impl;
 
 import com.neorispichincha.app.dto.ClienteListarDto;
 import com.neorispichincha.app.entidad.Cliente;
+import com.neorispichincha.app.servicio.cliente.IServicioConsruirDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ServicioConstruirDto {
+public class ServicioConstruirDto implements IServicioConsruirDto {
 
 
-    public List<ClienteListarDto> realizar(List<Cliente> clientes) {
+    @Override
+    public List<ClienteListarDto> construirClienteListarDto(List<Cliente> clientes) {
         List<ClienteListarDto> clientesDto = new ArrayList<ClienteListarDto>();
         for (var cliente : clientes) {
             clientesDto.add(

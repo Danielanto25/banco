@@ -16,5 +16,21 @@ public class TipoCuenta {
 	private int id;
 	@Column(nullable = false)
 	private String nombre;
-	
+
+	public TipoCuenta(){
+
+	}
+
+	public TipoCuenta(int id, String nombre) {
+		this.id = id;
+		this.nombre = nombre;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
 }

@@ -15,51 +15,61 @@ import javax.persistence.Table;
 @Table(name = "movimientos")
 public class Movimiento {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private LocalDateTime fecha;
-	@ManyToOne
-	@JoinColumn(name = "id_tipo_movimiento", foreignKey = @ForeignKey(name = "fk_movimiento_tipo_movimiento"))
-	private TipoMovimiento tipoMovimiento;
-	private Float valor;
-	private Float saldo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private LocalDateTime fecha;
+    @ManyToOne
+    @JoinColumn(name = "id_tipo_movimiento", foreignKey = @ForeignKey(name = "fk_movimiento_tipo_movimiento"))
+    private TipoMovimiento tipoMovimiento;
+    private Float valor;
+    private Float saldo;
+    @ManyToOne
+    @JoinColumn(name = "id_cuenta", foreignKey = @ForeignKey(name = "fk_cuenta_movimiento"))
+    private Cuenta cuenta;
 
-	public Movimiento(LocalDateTime fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo) {
-		super();
-		this.fecha = fecha;
-		this.tipoMovimiento = tipoMovimiento;
-		this.valor = valor;
-		this.saldo = saldo;
-	}
+    public Movimiento() {
 
-	public Movimiento(Integer id, LocalDateTime fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo) {
-		super();
-		this.id = id;
-		this.fecha = fecha;
-		this.tipoMovimiento = tipoMovimiento;
-		this.valor = valor;
-		this.saldo = saldo;
-	}
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Movimiento(Long id, LocalDateTime fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo, Cuenta cuenta) {
+        this.id = id;
+        this.fecha = fecha;
+        this.tipoMovimiento = tipoMovimiento;
+        this.valor = valor;
+        this.saldo = saldo;
+        this.cuenta = cuenta;
+    }
 
-	public LocalDateTime getFecha() {
-		return fecha;
-	}
+    public Movimiento(LocalDateTime fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo, Cuenta cuenta) {
+        this.fecha = fecha;
+        this.tipoMovimiento = tipoMovimiento;
+        this.valor = valor;
+        this.saldo = saldo;
+        this.cuenta = cuenta;
+    }
 
-	public TipoMovimiento getTipoMovimiento() {
-		return tipoMovimiento;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Float getValor() {
-		return valor;
-	}
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
 
-	public Float getSaldo() {
-		return saldo;
-	}
+    public TipoMovimiento getTipoMovimiento() {
+        return tipoMovimiento;
+    }
 
+    public Float getValor() {
+        return valor;
+    }
+
+    public Float getSaldo() {
+        return saldo;
+    }
+
+    public Cuenta getCuenta() {
+        return cuenta;
+    }
 }

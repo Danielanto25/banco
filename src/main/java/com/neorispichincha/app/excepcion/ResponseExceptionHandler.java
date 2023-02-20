@@ -55,4 +55,22 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 				request.getDescription(false));
 		return new ResponseEntity<ExceptionResponse>(er, HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(ExcepcionTipoDeCuenta.class)
+	public ResponseEntity<ExceptionResponse> manejarTipoDeCuentaInvalida(RepetidoModelException ex,
+																					WebRequest request) {
+
+		ExceptionResponse er = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<ExceptionResponse>(er, HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(ExcepcionMovimientoNoValido.class)
+	public ResponseEntity<ExceptionResponse> manejarMovimientoNoValido(RepetidoModelException ex,
+																		 WebRequest request) {
+
+		ExceptionResponse er = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<ExceptionResponse>(er, HttpStatus.BAD_REQUEST);
+	}
+
+
 }

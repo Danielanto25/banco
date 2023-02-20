@@ -6,4 +6,5 @@ import com.neorispichincha.app.entidad.Cliente;
 
 public interface ClienteRepositorio extends JpaRepository<Cliente, Long>{
 
+
 }

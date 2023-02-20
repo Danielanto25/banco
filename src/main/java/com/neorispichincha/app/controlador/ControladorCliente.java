@@ -2,10 +2,7 @@ package com.neorispichincha.app.controlador;
 
 import com.neorispichincha.app.dto.ClienteListarDto;
 import com.neorispichincha.app.entidad.Cliente;
-import com.neorispichincha.app.servicio.cliente.ServicioActulizarCliente;
-import com.neorispichincha.app.servicio.cliente.ServicioEliminarCliente;
-import com.neorispichincha.app.servicio.cliente.ServicioListarCliente;
-import com.neorispichincha.app.servicio.cliente.ServicioRegistrarCliente;
+import com.neorispichincha.app.servicio.cliente.IServicioCliente;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,40 +13,33 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "/api/cliente")
 public class ControladorCliente {
-    private final ServicioRegistrarCliente registrarCliente;
-    private final ServicioListarCliente listarCliente;
-    private final ServicioActulizarCliente actualizarCliente;
-    private final ServicioEliminarCliente eliminarCliente;
+    private final IServicioCliente servicioCliente;
 
-
-    public ControladorCliente(ServicioRegistrarCliente registrarCliente, ServicioListarCliente listarCliente, ServicioActulizarCliente actualizarCliente, ServicioEliminarCliente eliminarCliente) {
-        this.registrarCliente = registrarCliente;
-        this.listarCliente = listarCliente;
-        this.actualizarCliente = actualizarCliente;
-
-        this.eliminarCliente = eliminarCliente;
+    public ControladorCliente(IServicioCliente servicioCliente) {
+        this.servicioCliente = servicioCliente;
     }
+
 
     @GetMapping
     public ResponseEntity<List<ClienteListarDto>> listar() {
         return ResponseEntity.ok()
-                .body(this.listarCliente.realizar());
+                .body(this.servicioCliente.listar());
     }
 
     @PostMapping
     public ResponseEntity<Void> registrar(@RequestBody Cliente cliente) {
-        var idCliente = registrarCliente.realizar(cliente);
+        var idCliente = servicioCliente.registrar(cliente);
         return ResponseEntity.created(URI.create("/api/cliente/" + idCliente)).build();
     }
 
     @PutMapping
-    public ResponseEntity<Void> actualizar(@RequestBody Cliente cliente) {
-        var idCliente = actualizarCliente.realizar(cliente);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Cliente> actualizar(@RequestBody Cliente cliente) {
+        var clienteActualizado = servicioCliente.actualizar(cliente);
+        return ResponseEntity.ok().body(clienteActualizado);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathParam("id") Long id) {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
     }
 }
