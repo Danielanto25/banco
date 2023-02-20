@@ -1,6 +1,7 @@
 package com.neorispichincha.app.entidad;
 
 import com.neorispichincha.app.util.ValidadorArgumento;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -15,6 +16,7 @@ public abstract class Persona {
     private Long id;
     private String nombre;
     private String genero;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     @Column(unique = true)
     private String identificacion;

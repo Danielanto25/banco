@@ -2,6 +2,7 @@ package com.neorispichincha.app.servicio.cuenta.impl;
 
 import com.neorispichincha.app.dto.CuentaListarDto;
 import com.neorispichincha.app.entidad.Cuenta;
+import com.neorispichincha.app.excepcion.RepetidoModelException;
 import com.neorispichincha.app.repositorio.CuentaRepositorio;
 import com.neorispichincha.app.servicio.cuenta.IServicioContruirDto;
 import com.neorispichincha.app.servicio.cuenta.IServicioCuenta;
@@ -31,6 +32,7 @@ public class ServicioCuentaImpl implements IServicioCuenta {
 
     @Override
     public Long registrar(Cuenta cuenta) {
+        validarRepetido(cuenta.getNumeroCuenta());
         return cuentaRepositorio.save(construirCuentaValidada(cuenta)).getId();
     }
 
@@ -54,6 +56,11 @@ public class ServicioCuentaImpl implements IServicioCuenta {
                         , cuenta.getEstado(), cuenta.getCliente());
 
 
+    }
+
+    private void validarRepetido(Long numeroCuenta) {
+        if (cuentaRepositorio.listarPorNumeroDeCuenta(numeroCuenta) != null)
+            throw new RepetidoModelException("Numero de Cuenta Repetido");
     }
 
 }

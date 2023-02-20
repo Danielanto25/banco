@@ -2,10 +2,11 @@ package com.neorispichincha.app.servicio.cuenta.impl;
 
 import com.neorispichincha.app.excepcion.NoEncontradoException;
 import com.neorispichincha.app.repositorio.CuentaRepositorio;
+import com.neorispichincha.app.servicio.cuenta.IServicioValidarCuenta;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ValidarExistenciaDeCuenta {
+public class ValidarExistenciaDeCuenta implements IServicioValidarCuenta {
 
     private final CuentaRepositorio cuentaRepositorio;
 
@@ -13,7 +14,7 @@ public class ValidarExistenciaDeCuenta {
         this.cuentaRepositorio = cuentaRepositorio;
     }
 
-    public void validarExistenciaDeCuenta(Long id) {
+    public void realizar(Long id) {
         if (cuentaRepositorio.findById(id).isEmpty()) throw new NoEncontradoException("La cuenta no existe");
     }
 }

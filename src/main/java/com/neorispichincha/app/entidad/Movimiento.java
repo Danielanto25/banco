@@ -1,5 +1,8 @@
 package com.neorispichincha.app.entidad;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -18,7 +21,8 @@ public class Movimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDateTime fecha;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fecha;
     @ManyToOne
     @JoinColumn(name = "id_tipo_movimiento", foreignKey = @ForeignKey(name = "fk_movimiento_tipo_movimiento"))
     private TipoMovimiento tipoMovimiento;
@@ -32,7 +36,7 @@ public class Movimiento {
 
     }
 
-    public Movimiento(Long id, LocalDateTime fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo, Cuenta cuenta) {
+    public Movimiento(Long id, LocalDate fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo, Cuenta cuenta) {
         this.id = id;
         this.fecha = fecha;
         this.tipoMovimiento = tipoMovimiento;
@@ -41,7 +45,7 @@ public class Movimiento {
         this.cuenta = cuenta;
     }
 
-    public Movimiento(LocalDateTime fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo, Cuenta cuenta) {
+    public Movimiento(LocalDate fecha, TipoMovimiento tipoMovimiento, Float valor, Float saldo, Cuenta cuenta) {
         this.fecha = fecha;
         this.tipoMovimiento = tipoMovimiento;
         this.valor = valor;
@@ -53,7 +57,7 @@ public class Movimiento {
         return id;
     }
 
-    public LocalDateTime getFecha() {
+    public LocalDate getFecha() {
         return fecha;
     }
 

@@ -1,84 +1,88 @@
 package com.neorispichincha.app.servicio.movimiento.impl;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import com.neorispichincha.app.dto.MovimientoReporteDto;
+import com.neorispichincha.app.servicio.movimiento.IServicioTransformarDto;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.neorispichincha.app.dto.MovimientoInsertDto;
 import com.neorispichincha.app.entidad.Cuenta;
 import com.neorispichincha.app.entidad.Movimiento;
 import com.neorispichincha.app.entidad.TipoMovimiento;
-import com.neorispichincha.app.excepcion.ExcepcionMovimientoNoValido;
 import com.neorispichincha.app.excepcion.NoEncontradoException;
 import com.neorispichincha.app.repositorio.CuentaRepositorio;
 import com.neorispichincha.app.repositorio.MovimientoRepositorio;
-import com.neorispichincha.app.repositorio.TipoMovimientoRepositorio;
-import com.neorispichincha.app.servicio.cuenta.impl.ValidarExistenciaDeCuenta;
 import com.neorispichincha.app.servicio.movimiento.IServicioMovimiento;
-import com.neorispichincha.app.util.EnumTipoMovimiento;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
+import com.neorispichincha.app.servicio.movimiento.IServicioValidarMovimiento;
 
 @Service
 public class ServicioMovimiento implements IServicioMovimiento {
 
     private final MovimientoRepositorio movimientoRepositorio;
     private final CuentaRepositorio cuentaRepositorio;
-    private final ValidarExistenciaDeCuenta validarExistenciaDeCuenta;
-    private final TipoMovimientoRepositorio tipoMovimientoRepositorio;
+    private final IServicioValidarMovimiento servicioValidarMovimiento;
+    private final IServicioTransformarDto servicioTransformarDto;
 
-    public ServicioMovimiento(MovimientoRepositorio movimientoRepositorio, CuentaRepositorio cuentaRepositorio, ValidarExistenciaDeCuenta validarExistenciaDeCuenta, TipoMovimientoRepositorio tipoMovimientoRepositorio) {
+    public ServicioMovimiento(MovimientoRepositorio movimientoRepositorio, CuentaRepositorio cuentaRepositorio, IServicioValidarMovimiento servicioValidarMovimiento, IServicioTransformarDto servicioTransformarDto) {
         this.movimientoRepositorio = movimientoRepositorio;
         this.cuentaRepositorio = cuentaRepositorio;
-        this.validarExistenciaDeCuenta = validarExistenciaDeCuenta;
-        this.tipoMovimientoRepositorio = tipoMovimientoRepositorio;
+        this.servicioValidarMovimiento = servicioValidarMovimiento;
+        this.servicioTransformarDto = servicioTransformarDto;
     }
+
 
     @Override
     public Long registrar(Movimiento movimiento) {
-        return null;
+        return movimientoRepositorio.save(construirMovimientoValidado(movimiento)).getId();
     }
 
     @Override
     public Movimiento actualizar(Movimiento movimiento) {
-        return null;
+        return movimientoRepositorio.save(construirMovimientoValidado(movimiento));
     }
 
     @Override
-    public void eliminar(Long aLong) {
+    public void eliminar(Long id) {
+        validarExistencia(id);
+        movimientoRepositorio.deleteById(id);
+    }
 
+    @Override
+    public List<Movimiento> listar() {
+        return movimientoRepositorio.findAll();
     }
 
     @Override
     @Transactional
     public Long realizarMovimiento(MovimientoInsertDto movimientoInsertDto) {
 
-        Cuenta cuenta = validar(movimientoInsertDto);
-        Movimiento movimiento =new Movimiento(LocalDateTime.now(),new TipoMovimiento(movimientoInsertDto.getTipoMovimiento())
-                ,movimientoInsertDto.getMonto(),cuenta.getSaldo(),cuenta);
+        Cuenta cuenta = servicioValidarMovimiento.realizar(movimientoInsertDto);
+        Movimiento movimiento = new Movimiento(LocalDate.now(), new TipoMovimiento(movimientoInsertDto.getTipoMovimiento())
+                , movimientoInsertDto.getMonto(), cuenta.getSaldo(), cuenta);
+        cuentaRepositorio.save(cuenta);
 
         return movimientoRepositorio.save(movimiento).getId();
     }
 
-    private Cuenta validar(MovimientoInsertDto movimientoInsertDto) {
-        var cuenta = cuentaRepositorio.listarPorNumeroDeCuenta(movimientoInsertDto.getNumeroCuenta());
-        if (cuenta == null) throw new NoEncontradoException("numero de Cuenta invalido");
-
-        if (cuenta.getTipoCuenta().getId() != movimientoInsertDto.getTipoCuenta())
-            throw new NoEncontradoException("El tipo de cuenta no coincide");
-        if (tipoMovimientoRepositorio.findById(movimientoInsertDto.getTipoMovimiento()).isEmpty())
-            throw new NoEncontradoException("Tipo de movimiento no valido");
-
-        cuenta.actualizarSaldo(validarMovimientoValido(movimientoInsertDto.getTipoMovimiento()
-                , cuenta.getSaldo(), movimientoInsertDto.getMonto()));
-        return cuenta;
-
+    @Override
+    public List<MovimientoReporteDto> reportePorClienteYFecha(Long cliente, LocalDate fecha) {
+        return servicioTransformarDto.convertirAMovimientoReporteDto(
+                movimientoRepositorio.listarPorUsuarioYFeacha(cliente, fecha));
     }
 
-    private Float validarMovimientoValido(Long tipoMovimiento, Float saldoCuenta, Float valorMovimiento) {
+    private void validarExistencia(Long id) {
+        if (movimientoRepositorio.findById(id).isEmpty()) throw new NoEncontradoException("Movimiento no encontrado");
+    }
 
-        var resultado = EnumTipoMovimiento.DETECTOR.detectarMovimiento(tipoMovimiento) > 0 ?
-                saldoCuenta + valorMovimiento : saldoCuenta - valorMovimiento;
-        if (resultado < 0) throw new ExcepcionMovimientoNoValido("Saldo no disponible ");
-        return resultado;
+    private Movimiento construirMovimientoValidado(Movimiento movimiento) {
+        return movimiento.getId() != null ?
+                new Movimiento(movimiento.getId(), movimiento.getFecha(), movimiento.getTipoMovimiento(),
+                        movimiento.getValor(), movimiento.getSaldo(), movimiento.getCuenta()) :
+                new Movimiento(movimiento.getFecha(), movimiento.getTipoMovimiento(),
+                        movimiento.getValor(), movimiento.getSaldo(), movimiento.getCuenta());
     }
 
 

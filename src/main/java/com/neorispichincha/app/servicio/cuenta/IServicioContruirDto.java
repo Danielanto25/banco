@@ -5,6 +5,7 @@ import com.neorispichincha.app.entidad.Cuenta;
 
 import java.util.List;
 
+
 public interface IServicioContruirDto {
 
     List<CuentaListarDto> construirCuentaListarDto(List<Cuenta> cuentas);

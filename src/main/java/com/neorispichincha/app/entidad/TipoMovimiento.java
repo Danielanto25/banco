@@ -11,10 +11,13 @@ import javax.persistence.Table;
 public class TipoMovimiento {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nombre;
 
+	public TipoMovimiento() {
+		
+	}
 	public TipoMovimiento(Long id) {
 		this.id = id;
 	}

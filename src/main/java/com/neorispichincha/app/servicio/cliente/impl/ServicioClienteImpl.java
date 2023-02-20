@@ -3,6 +3,7 @@ package com.neorispichincha.app.servicio.cliente.impl;
 import com.neorispichincha.app.dto.ClienteListarDto;
 import com.neorispichincha.app.entidad.Cliente;
 import com.neorispichincha.app.excepcion.NoEncontradoException;
+import com.neorispichincha.app.excepcion.RepetidoModelException;
 import com.neorispichincha.app.repositorio.ClienteRepositorio;
 import com.neorispichincha.app.servicio.cliente.IServicioCliente;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,8 @@ public class ServicioClienteImpl implements IServicioCliente {
 
     @Override
     public Long registrar(Cliente cliente) {
-
-        return clienteRepositorio.save(construirCliente(cliente)).getId();
+        validarRepetido(cliente.getIdentificacion());
+    	return clienteRepositorio.save(construirCliente(cliente)).getId();
     }
 
     @Override
@@ -56,6 +57,9 @@ public class ServicioClienteImpl implements IServicioCliente {
 
     private void validarExistencia(Long id) {
         if (clienteRepositorio.findById(id).isEmpty()) throw new NoEncontradoException("El Cliente no existe");
-
+    }
+    private void validarRepetido(String identificacion){
+    	
+        if(clienteRepositorio.findByIdentificacion(identificacion).isPresent())throw new RepetidoModelException("Documento repetido");
     }
 }
