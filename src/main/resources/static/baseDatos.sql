@@ -1,3 +1,5 @@
+create database neoris;
+
 
 CREATE TABLE `clientes` (
   `id` bigint(20) NOT NULL,
