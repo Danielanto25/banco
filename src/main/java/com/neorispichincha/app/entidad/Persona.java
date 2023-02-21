@@ -18,8 +18,9 @@ public abstract class Persona {
     private String genero;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
-    @Column(unique = true)
+    @Column(unique = true,length = 15)
     private String identificacion;
+    @Column(length = 150)
     private String direccion;
     private Long telefono;
 
@@ -57,7 +58,7 @@ public abstract class Persona {
         ValidadorArgumento.validarObligatorio(direccion, "La direccion del cliente es obligatorio");
         ValidadorArgumento.validarObligatorio(telefono, "El telefono del cliente es obligatorio");
         ValidadorArgumento.validarObligatorio(fechaNacimiento, "La Fecha de nacimiento del cliente es obligatorio");
-
+        ValidadorArgumento.validarLongitud(direccion,150,"la direccion ingresada supera el maximo de caracteres");
     }
 
     public Integer obtenerEdad() {

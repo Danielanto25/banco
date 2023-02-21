@@ -16,14 +16,20 @@ public class TipoMovimiento {
 	private String nombre;
 
 	public TipoMovimiento() {
-		
+
 	}
+
 	public TipoMovimiento(Long id) {
 		this.id = id;
 	}
 
 	public TipoMovimiento(Long id, String nombre) {
 		this.id = id;
+		this.nombre = nombre;
+	}
+
+	public TipoMovimiento(String nombre) {
+
 		this.nombre = nombre;
 	}
 

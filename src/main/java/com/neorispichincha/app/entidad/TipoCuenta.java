@@ -25,6 +25,12 @@ public class TipoCuenta {
 		this.id = id;
 		this.nombre = nombre;
 	}
+	public TipoCuenta( String nombre) {
+		this.nombre = nombre; 
+	}
+	public TipoCuenta(int id){
+		this.id = id;
+	}
 
 	public int getId() {
 		return id;

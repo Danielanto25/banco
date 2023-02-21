@@ -24,6 +24,9 @@ public class Estado {
 	public Estado(Long id) {
 		this.id = id;
 	}
+	public Estado(String nombre) {
+		this.nombre = nombre;
+	}
 
 	public Estado(Long id, String nombre) {
 		super();

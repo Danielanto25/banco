@@ -35,13 +35,13 @@ public class ControladorMovimiento {
     @PostMapping("ingreso-manual")
     public ResponseEntity<Void> realizarManual(@RequestBody Movimiento movimiento) {
         var id = servicioMovimiento.registrar(movimiento);
-        return ResponseEntity.created(URI.create("api/movimiento" + id)).build();
+        return ResponseEntity.created(URI.create("api/movimiento/" + id)).build();
     }
 
     @PostMapping
     public ResponseEntity<Void> realizar(@RequestBody MovimientoInsertDto movimientoInsertDto) {
         var id = servicioMovimiento.realizarMovimiento(movimientoInsertDto);
-        return ResponseEntity.created(URI.create("api/movimiento" + id)).build();
+        return ResponseEntity.created(URI.create("api/movimiento/" + id)).build();
     }
 
     @PutMapping

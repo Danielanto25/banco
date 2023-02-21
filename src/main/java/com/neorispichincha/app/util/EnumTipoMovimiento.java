@@ -17,6 +17,9 @@ public enum EnumTipoMovimiento {
         this.identificador = identificador;
     }
 
+    public Long getTipoMovimiento() {
+    	return tipoMovimiento;
+    }
 
     public int detectarMovimiento(Long tipo) {
 
