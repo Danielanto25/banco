@@ -70,6 +70,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 				request.getDescription(false));
 		return new ResponseEntity<ExceptionResponse>(er, HttpStatus.BAD_REQUEST);
 	}
-
+	@ExceptionHandler(ExcepcionArgumento.class)
+	public ResponseEntity<ExceptionResponse> manejarArgumento(ExcepcionArgumento ex,
+																	   WebRequest request) {
+		ExceptionResponse er = new ExceptionResponse(LocalDateTime.now(), ex.getMessage(),
+				request.getDescription(false));
+		return new ResponseEntity<ExceptionResponse>(er, HttpStatus.BAD_REQUEST);
+	}
 
 }
